@@ -18,6 +18,7 @@
 \usepackage{adjustbox}
 \usepackage{upquote}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \usepackage[hidelinks]{hyperref}
 \usetikzlibrary{mindmap,shadows, shapes, arrows, positioning}
 
@@ -89,74 +90,148 @@ Classify the following as polynomial, exponential, or logarithmic expressions.
     \part Polynomial.
     \part Logarithmic.
     \part Exponential.
-    \part Ambiguous.
-    \part Ambiguous.
-    \part Ambiguous.
+    \part Ambiguous. The exponential term $2^n$ will grow much quicker than the polynomial term $n^2$.
+    \part Ambiguous. Sometimes called linearithmic.
     \part Exponential.
   \end{parts}
 \end{solution}
 
 
 \question
-Explain what the P computational complexity class is, and give an example of a problem known to be in P.
+  Explain what the P computational complexity class is, and give an example of a problem known to be in P.
+  \begin{solution}
+    An algorithm is said to be solvable in \emph{polynomial time} if the number of steps required to complete the algorithm for a given input is $O(n^k)$ for some nonnegative integer $k$, where $n$ is the size of the algorithm's input.
+
+    In 2002, Manindra Agrawal, Neeraj Kayal, and Nitin Saxena proved, in a paper called \emph{PRIMES is in P}, that the problem of determining whether a given natural number was a prime or not is in P.
+    Their algorithm is often referred to as the AKS primality test.
+  \end{solution}
+
 
 
 \question
 Explain what PRIMES is.
 \begin{solution}
-  \[ PRIMES = \{2, 3, 5, 7, 11, \ldots \} \]
+  \[ \textrm{PRIMES} = \{2, 3, 5, 7, 11, \ldots \} \]
   PRIMES is the set of all prime numbers, and is a subset of the natural numbers.
 \end{solution}
 
 
 \question
-Describe two different algorithms the check if a number is a prime.
-The algorithms should accept a single positive integer as input, and output true if the number is prime and false otherwise.
+  Describe two different algorithms the check if a number is a prime.
+  The algorithms should accept a single positive integer as input, and output true if the number is prime and false otherwise.
+
+  \begin{solution}
+    \begin{minted}{java}
+public static boolean is_prime_brute(int n) {
+  for (int i = 2; i < n; i++)
+    if (n % i == 0)
+      return false;
+  return true;
+}
+
+public static boolean is_prime_sqrt(int n) {
+  for (int i = 2; i < Math.sqrt(n); i++)
+    if (n % i == 0)
+      return false;
+  return true;
+}
+    \end{minted}
+  \end{solution}
 
 
 \question
-Determine which of the following are in PRIMES (without Google).
-\begin{parts}
-  \part 2
-  \part 3
-  \part 4
-  \part 10
-  \part 11
-  \part 13,109
-  \part 100,827
-  \part 102,203
-\end{parts}
-\begin{solution}
+  Determine which of the following are in PRIMES (without Google).
   \begin{parts}
-    \part Yes
-    \part Yes
-    \part No
-    \part No
-    \part Yes
-    \part Yes
-    \part No
-    \part Yes
+    \part 2
+    \part 3
+    \part 4
+    \part 10
+    \part 11
+    \part 13,109
+    \part 100,827
+    \part 102,203
   \end{parts}
-\end{solution}
+  \begin{solution}
+    \begin{parts}
+      \part Yes
+      \part Yes
+      \part No
+      \part No
+      \part Yes
+      \part Yes
+      \part No
+      \part Yes
+    \end{parts}
+  \end{solution}
 
 
 \question
-Explain what a decision problem is, and how decision problems relate to Turing machines.
-\begin{solution}
-As in notes.
-\end{solution}
+  Explain what a decision problem is, and how decision problems relate to Turing machines.
+  \begin{solution}
+    A decision problem is a problem where the answer takes on one of two values, typically true or false.
+    For convenience, we usually represent true by 1 and false by 0.
+    We also usually encode instances of the problem in binary.
+    In that case, a decision problem $f$ has the following form.
+      \[ f:\{0,1\}^n \rightarrow \{0,1\} \]
+    
+    Decision problems are studied extensively in the context of Turing machines.
+    For a given input, a given Turing machine can end up in three different scenarios.
+    It can end in the accept state, it can end in the fail state, or it can end up in an infinite loop.
+    Turing machines that never end in an infinite loop are said to decide the language they accept.
+    In this context, accept represents an outcome of 1, and fail represents an outcome of 0 in the notation above.
+  \end{solution}
 
 
 \question
-Explain the decision problem related to PRIMES.
-
+  Explain the decision problem related to PRIMES.
+  \begin{solution}
+    PRIMES is the set of all prime numbers.
+      $$ \textrm{PRIMES} = \{ i \mid i \in \mathbb{N} , i \textrm{ is prime} \} $$
+    The decision problem related to primes is the function $f$ where:
+      $$ f(i):\mathbb{N} \rightarrow \{0,1\}: \left\{
+            \begin{array}{ll}
+              1 & \textrm{if } i \textrm{ is prime} \\
+              0 & \textrm{otherwise}
+            \end{array}
+        \right. $$
+    So, the decision problem takes as input any natural number.
+    It outputs 1 if that number is a prime and 0 otherwise.
+  \end{solution}
 
 \question
-Explain the concept of complexity in terms of Turing machines.
+  Explain the concept of complexity in terms of Turing machines.
+  \begin{solution}
+    A Turing machine essentially consists of a (linear) tape divided into cells, and a state table.
+    Each cell contains a single symbol.
+    At any given point in time the machine is in a single state, and is reading the symbol in a single cell.
+    The state table gives the rules as to what to do for the current symbol being read and the current state the machine is in.
+    The state table will indicate a symbol to overwrite the symbol in the current cell, the neighbouring cell to which the machine should move next, and the next state the machine should enter.
+
+    Let $n$ be the number of cells on the tape that do not initially (before the machine runs) contain the blank symbol.
+    Call this the size of input.
+    Now consider the language that the Turing machine accepts, and call it $L$.
+    This is the set of all possible inputs to the Turing machine in which it ends in the accept state.
+    
+    For each element of $L$, consider the number of times we have to look up the state table before the initial input is accepted.
+    Pick the worst of these, and call that the \emph{worst case}.
+    In general, $L$ is an infinite set, so we must express the worst case in terms of $n$.
+    Let $f(n)$ be the function of $n$ expressing the number of look-ups in the worst case.
+    The complexity of the Turing machine is $O(f(n))$.
+  \end{solution}
 
 \question
-Explain why if we can solve decision problem $A$ in polynomial time, and we can convert decision problem $B$ to problem $A$ in polynomial time, then we can solve problem $B$ in polynomial time too.
+  Explain why if we can solve decision problem $A$ in polynomial time, and we can convert decision problem $B$ to problem $A$ in polynomial time, then we can solve problem $B$ in polynomial time too.
+  \begin{solution}
+    Let $f(m)$ be the number of steps it takes in the worst case to solve an input of length $m$ for $A$.
+    Let $g(n)$ be the number of steps it takes in the worst case to convert an instance of $B$ to $A$.
+    Then in the worst case, an algorithm that converts $B$ to $A$ and then solves $A$ takes at most $f(m)+g(n)$ steps to complete.
+    So, the algorithm is $O(f(m)+g(n))$.
 
+    Now, we know that $f$ and $g$ are polynomials, because we were told they are in the question.
+    However, $f$ is a polynomial in $m$ and $g$ in $n$.
+    Can we express $n$ in terms of a polynomial in $m$?
+    We must be able to, because a Turing machine that works in polynomial time will always halt with a tape output that is of length a polynomial in the length of the input. 
+  \end{solution}
 
 \end{questions}
 
